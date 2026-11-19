@@ -752,7 +752,10 @@ const RelationModalWithContext = ({
 
   React.useLayoutEffect(() => {
     setTextValue('');
-  }, [fieldValue]);
+    // The typed text is cleared once a relation is picked, so the search must be reset too,
+    // otherwise the stale query keeps filtering the available options.
+    setSearchParams((s) => (s._q === '' && s.page === 1 ? s : { ...s, _q: '', page: 1 }));
+  }, [fieldValue, setSearchParams]);
 
   const handleSearch = async (search: string) => {
     setSearchParams((s) => ({ ...s, _q: search, page: 1 }));
